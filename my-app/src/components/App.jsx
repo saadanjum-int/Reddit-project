@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Space, List, Card } from "antd";
+import { Space, Card } from "antd";
 import Form from "./Form";
 import Button from "./Button";
+import SubredditCard from "./SubredditCard";
 
 function App() {
   const [subredditInput, setSubredditInput] = useState("");         
@@ -14,26 +15,35 @@ function App() {
     }
   };
 
+  const handleDeleteSubreddit = (subreddit) => {
+    setSubredditList(subredditList.filter(item => item !== subreddit));
+  };
+
   return (
-    <div style={{ padding: "20px", maxWidth: "600px", margin: "0 auto" }}>
+    <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
       <Card title="Subreddit Manager" style={{ marginBottom: "20px" }}>
         <Space direction="vertical" style={{ width: "100%" }}>
           <Form input={subredditInput} setInput={setSubredditInput} />
-          <Button onClick={handleAddSubreddit} text="Add Subreddit" type="primary" />
+          <Button
+            text="Add Subreddit"
+            onClick={handleAddSubreddit}
+            type="primary"
+              style={{ color: "yellow", backgroundColor: "blue" }}
+          />
         </Space>
       </Card>
 
       {subredditList.length > 0 && (
-        <Card title="Your Subreddits">
-          <List
-            dataSource={subredditList}
-            renderItem={(subreddit, index) => (
-              <List.Item key={index}>
-                <span>{subreddit}</span>
-              </List.Item>
-            )}
-          />
-        </Card>
+        <div>
+          <h2>Your Subreddits</h2>
+          {subredditList.map((subreddit) => (
+            <SubredditCard
+              key={subreddit}
+              subreddit={subreddit}
+              onDelete={handleDeleteSubreddit}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
