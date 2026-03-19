@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Space, Card, Row, Col } from "antd";
+import { Space, Card, Row, Col, Modal, Button as AntButton } from "antd";
+import { PlusOutlined } from "@ant-design/icons"; // ✓ Import this
 import Form from "./Form";
 import Button from "./Button";
 import SubredditCard from "./SubredditCard";
@@ -7,11 +8,21 @@ import SubredditCard from "./SubredditCard";
 function App() {
   const [subredditInput, setSubredditInput] = useState("");         
   const [subredditList, setSubredditList] = useState([]); 
+  const [isModalOpen, setIsModalOpen] = useState(false); // ✓ Fixed variable name
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const handleAddSubreddit = () => {
     if (subredditInput.trim() !== "") {
       setSubredditList([...subredditList, subredditInput]);
       setSubredditInput(""); 
+      setIsModalOpen(false);
     }
   };
 
@@ -27,10 +38,30 @@ function App() {
         padding: 20,
       }}
     >
-      
-    
-    <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-      <Card title="Subreddit Manager" style={{ marginBottom: "20px", backgroundColor: "#FFB366" }}>
+      {/* ✓ Add floating + button */}
+      <AntButton 
+        type="primary" 
+        shape="circle" 
+        icon={<PlusOutlined />} 
+        onClick={showModal}
+        size="large"
+        style={{
+          position: 'fixed',
+          bottom: 30,
+          right: 30,
+          width: 60,
+          height: 60,
+          fontSize: 24
+        }}
+      />
+
+      {/* ✓ Modal with correct syntax */}
+      <Modal
+        title="Enter the name of subreddit"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={null}
+      >
         <Space direction="vertical" style={{ width: "100%" }}>
           <Form input={subredditInput} setInput={setSubredditInput} />
           <Button
@@ -39,24 +70,27 @@ function App() {
             type="primary"
           />
         </Space>
-      </Card>
+      </Modal>
+    
+      <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+        {/* ✓ Remove the Subreddit Manager Card */}
 
-      {subredditList.length > 0 && (
-        <div>
-          <h2>Your Subreddits</h2>
-          <Row gutter={[16, 16]}>
-            {subredditList.map((subreddit) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={subreddit}>
-                <SubredditCard
-                  subreddit={subreddit}
-                  onDelete={handleDeleteSubreddit}
-                />
-              </Col>
-            ))}
-          </Row>
-        </div>
-      )}
-    </div>
+        {subredditList.length > 0 && (
+          <div>
+            <h2>Your Subreddits</h2>
+            <Row gutter={[16, 16]}>
+              {subredditList.map((subreddit) => (
+                <Col xs={24} sm={12} md={8} lg={6} key={subreddit}>
+                  <SubredditCard
+                    subreddit={subreddit}
+                    onDelete={handleDeleteSubreddit}
+                  />
+                </Col>
+              ))}
+            </Row>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
