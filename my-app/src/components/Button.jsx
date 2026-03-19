@@ -9,9 +9,23 @@ function Button({
 }) {
   return (
     <AntButton 
-      type={type} 
+      type={type}
       onClick={onClick}
-      style={style}
+      style={{
+        fontSize: 16,
+        fontWeight: "bold",
+        padding: "10px 20px",
+        height: "40px",
+        display: "inline-block",
+        visibility: "visible !important",
+        opacity: "1 !important",
+        pointerEvents: "auto",
+        cursor: "pointer",
+        backgroundColor: type === "primary" ? "#1890ff !important" : undefined,
+        color: type === "primary" ? "#fff !important" : undefined,
+        border: type === "primary" ? "1px solid #1890ff !important" : undefined,
+        ...style
+      }}
     >
       {text}
     </AntButton>
