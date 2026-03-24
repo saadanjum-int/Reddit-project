@@ -22,6 +22,7 @@ export const fetchSubredditPosts = async (subreddit) => {
     
     return posts;
   } catch (error) {
+    
     console.error('Error fetching posts:', error);
     return [];
   }

@@ -4,6 +4,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import Form from "./Form";
 import Button from "./Button";
 import SubredditCard from "./SubredditCard";
+import { fetchSubredditPosts } from "./RedditApi";
 
 import Loading from "./Loading";
 
@@ -15,37 +16,43 @@ function App() {
   const [loadingSubreddits, setLoadingSubreddits] = useState({});
   const [isAdding, setIsAdding] = useState(false);
 
+
   const showModal = () => setIsModalOpen(true);
   
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setSubredditInput(""); 
-  };
+ 
 
   const handleAddSubreddit = async () => {
-    if (!subredditInput.trim()) return;
+  const newSubreddit = subredditInput.trim();
+  if (!newSubreddit) return;
 
-    setIsAdding(true);
-    try {
-      
-      
-      const newSubreddit = subredditInput.trim();
-      
-      
-      if (!subredditList.includes(newSubreddit)) {
-        setSubredditList([...subredditList, newSubreddit]);
-      }
-      
-      
-      setSubredditInput("");
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Failed to add subreddit", error);
-    } finally {
-      setIsAdding(false);
+  setIsAdding(true); 
+  setLoadingSubreddits(prev => ({ ...prev, [newSubreddit]: true })); 
+
+  try {
+    const fetchedPosts = await fetchSubredditPosts(newSubreddit);
+
+    if (!fetchedPosts || fetchedPosts.length === 0) {
+      alert('Subreddit not found. Please check the name and try again.');
+      return;
     }
-  };
 
+    
+    if (!subredditList.includes(newSubreddit)) {
+      setSubredditList([...subredditList, newSubreddit]);
+      setPosts(prev => ({ ...prev, [newSubreddit]: fetchedPosts }));
+    }
+
+    setSubredditInput("");
+    setIsModalOpen(false);
+
+  } catch (error) {
+    console.error("Failed to add subreddit", error);
+    alert("Error fetching subreddit posts!");
+  } finally {
+    setIsAdding(false); 
+    setLoadingSubreddits(prev => ({ ...prev, [newSubreddit]: false })); 
+  }
+};
   const handleDeleteSubreddit = (subreddit) => {
     setSubredditList(subredditList.filter(item => item !== subreddit));
     setLoadingSubreddits(prev => ({ ...prev, [subreddit]: false }));
@@ -88,7 +95,7 @@ function App() {
       <Modal
         title="Enter the name of subreddit"
         open={isModalOpen}
-        onCancel={handleCancel}
+       
         footer={null}
       >
         <Space direction="vertical" style={{ width: "100%" }}>
