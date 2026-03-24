@@ -95,7 +95,7 @@ function App() {
       <Modal
         title="Enter the name of subreddit"
         open={isModalOpen}
-       
+        onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
             <Space 
@@ -115,6 +115,7 @@ function App() {
               display: "block",
               width: "100%"
             }}
+            setIsModalOpen={false}
           >
             Add Subreddit
           </Button>
