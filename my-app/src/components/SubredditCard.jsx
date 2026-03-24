@@ -53,7 +53,7 @@ function SubredditCard({ subreddit, onDelete, setPosts, posts }) {
           background: '#FFB366',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-middle', marginBottom: 16 }}>
           <Button
             onClick={() => onDelete(subreddit)}
             type="primary"

@@ -98,9 +98,13 @@ function App() {
        
         footer={null}
       >
-        <Space direction="vertical" style={{ width: "100%" }}>
+            <Space 
+        direction="vertical" 
+        size="large"   // 👈 increases space
+        style={{ width: "100%" }}
+      >
           <Form input={subredditInput} setInput={setSubredditInput} />
-          
+            
           <Button
             type="primary"
             onClick={handleAddSubreddit}
